@@ -6,7 +6,7 @@ const signIn = async (email: string, password: string) => {
             throw new Error("Email not found");
         } else {
             const response = await axios.post(
-                import.meta.env.VITE_BACKEND_URL + "/api/user/sign-in",
+                import.meta.env.VITE_SERVER_URL + "/api/user/sign-in",
                 {
                     email,
                     password,
@@ -20,11 +20,11 @@ const signIn = async (email: string, password: string) => {
             );
 
             if (response.status === 200) {
-                sessionStorage.setItem(
+                localStorage.setItem(
                     "accessTokenExpiry",
                     response.data.data.accessTokenExpiry.toString()
                 );
-                sessionStorage.setItem(
+                localStorage.setItem(
                     "refreshTokenExpiry",
                     response.data.data.refreshTokenExpiry.toString()
                 );

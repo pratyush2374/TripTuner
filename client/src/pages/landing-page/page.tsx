@@ -5,7 +5,8 @@ import LandingHelmet from "./landing-page-components/LandingHelmet";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { MapPin, Calendar, DollarSign } from "lucide-react";
+import { MapPin, Calendar, DollarSign, Save } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface ItineraryDay {
     id: string;
@@ -39,19 +40,15 @@ const LandingPage: React.FC = () => {
 
     const handleSuccess = (response: ItineraryResponse) => {
         setItinerary(response);
-        // Smooth scroll to the itinerary section
-        document
-            .getElementById("itinerary-result")
-            ?.scrollIntoView({ behavior: "smooth" });
+        window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
     return (
         <>
             <LandingHelmet />
-            <LandingNavbar />
-            d
+            <LandingNavbar />d
             <main className="container mx-auto px-4 py-8 w-[90%] md:w-[75%]">
-                <ItineraryForm onSuccess={handleSuccess} />
+                {!itinerary && <ItineraryForm onSuccess={handleSuccess} />}
 
                 {itinerary && (
                     <div id="itinerary-result" className="mt-12 space-y-8">
@@ -160,6 +157,17 @@ const LandingPage: React.FC = () => {
                                 </p>
                             </CardContent>
                         </Card>
+
+                        <Button
+                            onClick={() => setItinerary(null)}
+                            className="mr-4 bg-blue-500"
+                        >
+                            Generate Another Trip
+                        </Button>
+                        <Button onClick={() => window.print()}>
+                            <Save />
+                            Save as pdf
+                        </Button>
                     </div>
                 )}
             </main>

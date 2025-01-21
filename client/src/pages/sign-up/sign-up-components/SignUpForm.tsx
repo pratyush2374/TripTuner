@@ -28,7 +28,7 @@ const SignUpForm: React.FC = () => {
 
     const { toast } = useToast();
     const [otpSent, setOtpSent] = useState(false);
-    const [verifyCode, setVerifyCode] = useState(0);
+    const [verifying, setVerifying] = useState(false);
     const [sent, setSent] = useState(false);
     const [userData, setUserData] = useState({});
     const [resendTimer, setResendTimer] = useState(0);
@@ -53,7 +53,7 @@ const SignUpForm: React.FC = () => {
         setSent(true);
         try {
             const response = await axios.post(
-                `${import.meta.env.VITE_BACKEND_URL}/api/user/send-code`,
+                `${import.meta.env.VITE_SERVER_URL}/api/user/send-code`,
                 userData
             );
 
@@ -66,7 +66,6 @@ const SignUpForm: React.FC = () => {
                 });
             }
 
-            setVerifyCode(response.data.data.verifyCode);
             toast({
                 title: "Success",
                 description: "OTP has been sent to your email!",
@@ -135,6 +134,7 @@ const SignUpForm: React.FC = () => {
     };
 
     const handleVerify = async (data: verifyCodeData) => {
+        setVerifying(true);
         const { verificationCode } = data;
         if (!verificationCode) {
             return toast({
@@ -144,38 +144,61 @@ const SignUpForm: React.FC = () => {
             });
         }
 
-        if (Number(verificationCode) !== verifyCode) {
-            return toast({
-                title: "Error",
-                description: "Invalid Verification Code",
-                variant: "destructive",
-            });
-        }
-
         // Send sign-up request after verification
         try {
             const userDataObj = userData as FormData;
-            const response = await axios.post(
-                `${import.meta.env.VITE_BACKEND_URL}/api/user/sign-up`,
+            const res = await axios.post(
+                `${import.meta.env.VITE_SERVER_URL}/api/user/verify-code`,
                 {
-                    name: userDataObj.fullName,
                     email: userDataObj.email,
-                    password: userDataObj.password,
-                },
-                {
-                    withCredentials: true,
+                    code: verificationCode,
                 }
             );
 
-            if (response.status === 200) {
+            if (res.status == 200) {
                 toast({
                     title: "Success",
-                    description: "Account created successfully!",
-                    variant: "default",
+                    description:
+                        "Email Verified Successfully! Signing you up...",
+                });
+                const response = await axios.post(
+                    `${import.meta.env.VITE_SERVER_URL}/api/user/sign-up`,
+                    {
+                        name: userDataObj.fullName,
+                        email: userDataObj.email,
+                        password: userDataObj.password,
+                        currency: "INR",
+                    },
+                    {
+                        withCredentials: true,
+                    }
+                );
+
+                if (response.status === 200) {
+                    localStorage.setItem(
+                        "accessTokenExpiry",
+                        response.data.data.accessTokenExpiry.toString()
+                    );
+                    localStorage.setItem(
+                        "refreshTokenExpiry",
+                        response.data.data.refreshTokenExpiry.toString()
+                    );
+                    toast({
+                        title: "Success",
+                        description: "Account created successfully!",
+                        variant: "default",
+                    });
+                }
+
+                window.location.href = "/dashboard";
+            } else {
+                toast({
+                    title: "Error",
+                    description:
+                        res.data?.data || "Something went wrong during sign up",
+                    variant: "destructive",
                 });
             }
-
-            window.location.href = "/dashboard";
         } catch (error: any) {
             toast({
                 title: "Error",
@@ -184,6 +207,8 @@ const SignUpForm: React.FC = () => {
                     "Something went wrong during sign up",
                 variant: "destructive",
             });
+        } finally {
+            setVerifying(false);
         }
     };
 
@@ -288,7 +313,9 @@ const SignUpForm: React.FC = () => {
                                                 : ""}
                                         </button>
                                     </div>
-                                    <button type="submit">Verify</button>
+                                    <button type="submit">
+                                        {verifying ? "Verifying..." : "Verify"}
+                                    </button>
                                 </div>
                             </form>
                         )}

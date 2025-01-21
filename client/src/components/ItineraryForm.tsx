@@ -83,7 +83,10 @@ export function ItineraryForm({ onSuccess }: ItineraryFormProps) {
 
             const response = await axios.post<ItineraryResponse>(
                 `${import.meta.env.VITE_SERVER_URL}/api/itinerary/generate`,
-                payload
+                payload,
+                {
+                    withCredentials: true,
+                }
             );
 
             onSuccess(response.data);

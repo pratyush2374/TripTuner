@@ -6,7 +6,7 @@ const forgotPassword = async (email: string) => {
             throw new Error("Email not found");
         } else {
             const response = await axios.post(
-                import.meta.env.VITE_BACKEND_URL +
+                import.meta.env.VITE_SERVER_URL +
                     "/api/user/send-forgot-password-link",
                 {
                     email,
