@@ -7,3 +7,44 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id               String      @id @default(auto()) @map("_id") @db.ObjectId
+  name             String
+  email            String      @unique
+  password         String
+  preferences      String[]
+  bio              String?
+  savedItineraries Itinerary[]
+  currency         Int
+  refreshToken     String
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+}
+
+model Itinerary {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  tags        String[]
+  totalDays   Int
+  destination String
+  days        Day[]
+  cost        Int
+  likes       Int
+  notes       String
+  isPublic    Boolean
+  user        User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String?  @db.ObjectId
+}
+
+model Day {
+  id                 String     @id @default(auto()) @map("_id") @db.ObjectId
+  placesOrActivities String[]
+  dayNumber          Int
+  morning            String
+  afternoon          String
+  evening            String
+  cost               Int
+  Itinerary          Itinerary? @relation(fields: [itineraryId], references: [id])
+  itineraryId        String?    @db.ObjectId
+}
