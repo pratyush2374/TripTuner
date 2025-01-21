@@ -6,9 +6,9 @@ class RedisClient {
     public static getInstance(): Redis {
         if (!RedisClient.instance) {
             RedisClient.instance = new Redis({
-                username: "default",
-                password: "KpA5TeTLWpkp4LYYzEsdbxI3mVzfUQR1",
-                host: "redis-14258.c305.ap-south-1-1.ec2.redns.redis-cloud.com",
+                username: process.env.REDIS_USERNAME,
+                password: process.env.REDIS_PASSWORD,
+                host: process.env.REDIS_HOST,
                 port: 14258,
                 retryStrategy(times) {
                     const delay = Math.min(times * 50, 2000);
@@ -17,7 +17,7 @@ class RedisClient {
                 maxRetriesPerRequest: 3,
                 enableReadyCheck: true,
                 connectTimeout: 10000,
-                lazyConnect: true, // Only connect when first command is executed
+                lazyConnect: true,
             });
 
             // Connection event handlers
@@ -37,10 +37,12 @@ class RedisClient {
                 console.log("Redis client connection ended");
             });
 
-            // Graceful shutdown
+            // Shutdown
             process.on("SIGINT", () => {
                 RedisClient.instance?.quit().then(() => {
-                    console.log("Redis client disconnected through app termination");
+                    console.log(
+                        "Redis client disconnected through app termination"
+                    );
                     process.exit(0);
                 });
             });

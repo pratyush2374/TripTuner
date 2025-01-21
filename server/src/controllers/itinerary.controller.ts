@@ -236,4 +236,38 @@ const editItinerary = asyncHandler(async (req: Request, res: Response) => {
         );
 });
 
-export { generateItinerary, likeItinerary, editItinerary };
+const getItineraries = asyncHandler(async (req: Request, res: Response) => {
+    console.log("Yooo");
+    const page = parseInt(req.params.page, 10);
+    
+    if (isNaN(page) || page < 1) {
+        throw new ApiError(400, "Invalid page number");
+    }
+
+    const itemsPerPage = 20;
+    const skip = (page - 1) * itemsPerPage;
+
+    // Fetch itineraries without the 'days' field
+    const itineraries = await prisma.itinerary.findMany({
+        skip,
+        take: itemsPerPage,
+        select: {
+            id: true,
+            title: true,
+            description: true,
+            tags: true,
+            totalDays: true,
+            destination: true,
+            cost: true,
+            likes: true,
+            notes: true,
+            isPublic: true,
+            userId: true,
+        },
+    });
+
+    return res.status(200).json(new ApiResponse(200, itineraries, "Itineraries fetched successfully"));
+});
+
+
+export { generateItinerary, likeItinerary, editItinerary, getItineraries };

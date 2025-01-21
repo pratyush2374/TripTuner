@@ -47,7 +47,7 @@ const generateAccessAndRefreshToken = async (
 
         return { accessToken, refreshToken };
     } catch (error) {
-        throw new Error("Failed to generate tokens");
+        throw new Error(`Failed to generate tokens ${error}`);
     }
 };
 

@@ -46,16 +46,63 @@ const sendCode = asyncHandler(async (req: Request, res: Response) => {
         .json(new ApiResponse(200, null, "Verification code sent"));
 });
 
-//Controller for verifying code
+// Controller for verifying the code
+const verifyCode = asyncHandler(async (req: Request, res: Response) => {
+    const { email, code } = req.body;
+
+    // Check if email and code are provided
+    if (!email || !code) {
+        return res
+            .status(400)
+            .json(new ApiError(400, "Email and code are required"));
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // Validate email format
+    if (!emailRegex.test(email)) {
+        return res.status(400).json(new ApiError(400, "Invalid email format"));
+    }
+
+    // Retrieve the verification code from Redis
+    const storedCode = await client.get(email);
+
+    // Check if the code exists and matches
+    if (!storedCode || storedCode !== code) {
+        return res
+            .status(400)
+            .json(new ApiError(400, "Invalid or expired verification code"));
+    }
+
+    // Remove the code from Redis after successful verification
+    await client.del(email);
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                null,
+                "Verification code verified successfully"
+            )
+        );
+});
+
+export { verifyCode };
 
 // Controller for signing up a user
 const signUp = asyncHandler(async (req: Request, res: Response) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, currency } = req.body;
 
-    if (!email || !password || !name) {
+    if (!email || !password || !name || !currency) {
         return res
             .status(400)
-            .json(new ApiError(400, "Email or password not found"));
+            .json(
+                new ApiError(
+                    400,
+                    "Email or password or name or currency not found"
+                )
+            );
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -81,6 +128,7 @@ const signUp = asyncHandler(async (req: Request, res: Response) => {
             email,
             refreshToken: "",
             password: hashedPassword,
+            currency,
         },
     });
     const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
@@ -96,10 +144,8 @@ const signUp = asyncHandler(async (req: Request, res: Response) => {
     });
 
     const cookieOptions: CookieOptions = {
-        httpOnly: false,
+        httpOnly: true,
         secure: true,
-        sameSite: "none",
-        path: "/",
     };
 
     return res
@@ -352,6 +398,32 @@ const resetPassword = asyncHandler(async (req: Request, res: Response) => {
     }
 });
 
+const getItineraries = asyncHandler(async (req: Request, res: Response) => {
+    const userId = req.user?.id;
+
+    if (!userId) {
+        return res
+            .status(401)
+            .json({ message: "Unauthorized. User ID not found." });
+    }
+
+    // Fetch all itineraries for the user
+    const itineraries = await prisma.itinerary.findMany({
+        where: { userId },
+    });
+
+    if (!itineraries || itineraries.length === 0) {
+        return res.status(404).json({
+            message: "No itineraries found for this user.",
+        });
+    }
+
+    return res.status(200).json({
+        success: true,
+        data: itineraries,
+    });
+});
+
 export {
     sendCode,
     signUp,
@@ -360,4 +432,5 @@ export {
     signOut,
     sendLinkForForgotPassword,
     resetPassword,
+    getItineraries,
 };

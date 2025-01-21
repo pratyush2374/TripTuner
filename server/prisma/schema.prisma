@@ -15,7 +15,7 @@ model User {
   preferences      String[]
   bio              String?
   savedItineraries Itinerary[]
-  currency         Int
+  currency         String
   refreshToken     String
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
