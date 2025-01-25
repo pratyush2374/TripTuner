@@ -5,6 +5,7 @@ export interface ItineraryInput {
     tourType: string;
     preferredActivities: string[];
     budget: string;
+    currency: string;
     modeOfTransport: string;
     activityLevel: string;
     customNote: string;
@@ -39,4 +40,19 @@ export interface ItineraryResponse {
     };
     message: string;
     success: boolean;
+}
+
+export interface Itinerary {
+    id: string;
+    title: string;
+    description: string;
+    tags: string[];
+    totalDays: number;
+    destination: string;
+    cost: number;
+    likes: number;
+    notes: string;
+    isPublic: boolean;
+    userId: string | null;
+    days: Day[];
 }
