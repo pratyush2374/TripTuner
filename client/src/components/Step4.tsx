@@ -43,7 +43,6 @@ const Step4: React.FC = () => {
                     withCredentials: true,
                 }
             );
-            console.log(response.data);
 
             if (response.data.success) {
                 dispatch(updateItineraries(response.data.data));
@@ -51,6 +50,13 @@ const Step4: React.FC = () => {
                     title: "Success",
                     description: "Itinerary generated successfully",
                 });
+
+                setTimeout(() => {
+                    window.scrollTo({
+                        top: 500,
+                        behavior: "smooth",
+                    });
+                }, 500);
             } else {
                 throw new Error(
                     response.data.message || "Itinerary generation failed"
@@ -152,7 +158,9 @@ const Step4: React.FC = () => {
                     type="submit"
                     className="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition-colors duration-300 font-semibold mt-4"
                 >
-                    {generating ? "Generating..." : "Get Itinerary"}
+                    {generating
+                        ? "Generating... This might take upto 20s"
+                        : "Get Itinerary"}
                 </button>
             </form>
         </div>

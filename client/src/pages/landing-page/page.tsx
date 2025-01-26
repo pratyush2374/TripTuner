@@ -2,6 +2,7 @@ import LandingNavbar from "./landing-page-components/LandingNavbar";
 import ItineraryForm from "@/components/ItineraryForm";
 import LandingHelmet from "./landing-page-components/LandingHelmet";
 import Title from "@/components/Title";
+import ItinerarySection from "@/components/ItinerarySection";
 
 const LandingPage: React.FC = () => {
     return (
@@ -12,6 +13,7 @@ const LandingPage: React.FC = () => {
                 <Title />
                 <ItineraryForm />
             </main>
+            <ItinerarySection />
         </>
     );
 };

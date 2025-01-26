@@ -1,121 +1,69 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { MapPin, Calendar, DollarSign, Save } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useSelector } from "react-redux";
+import React from "react";
+import { Helmet } from "react-helmet-async"; // Import Helmet
 
 const ItineraryHelmet: React.FC = () => {
-    const itineraries = useSelector((state: any) => state.itinerary.itinerary);
-    const itinerary = itineraries[0];
-
     return (
         <>
-            <div id="itinerary-result" className="mt-12 space-y-8">
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="text-3xl font-bold">
-                            {itinerary.title}
-                        </CardTitle>
-                        <div className="flex items-center gap-4 text-muted-foreground mt-2">
-                            <div className="flex items-center gap-1">
-                                <MapPin className="h-4 w-4" />
-                                {itinerary.destination}
-                            </div>
-                            <div className="flex items-center gap-1">
-                                <Calendar className="h-4 w-4" />
-                                {itinerary.totalDays} days
-                            </div>
-                            <div className="flex items-center gap-1">
-                                <DollarSign className="h-4 w-4" />
-                                {itinerary.cost} INR
-                            </div>
-                        </div>
-                        <p className="mt-4 text-muted-foreground">
-                            {itinerary.description}
-                        </p>
-                        <div className="flex flex-wrap gap-2 mt-4">
-                            {itinerary.data.tags.map((tag: any) => (
-                                <Badge key={tag} variant="secondary">
-                                    {tag}
-                                </Badge>
-                            ))}
-                        </div>
-                    </CardHeader>
-                </Card>
+            <Helmet>
+                <title>TripTuner - Your Customized Travel Itinerary</title>
 
-                {/* Daily Itinerary */}
-                <div className="space-y-6">
-                    {itinerary.data.days.map((day: any) => (
-                        <Card key={day.id}>
-                            <CardContent className="pt-6">
-                                <h3 className="text-xl font-semibold mb-4">
-                                    Day {day.dayNumber}
-                                </h3>
-                                <div className="space-y-4">
-                                    <div>
-                                        <h4 className="font-medium text-primary">
-                                            Morning
-                                        </h4>
-                                        <p className="mt-1">{day.morning}</p>
-                                    </div>
-                                    <Separator />
-                                    <div>
-                                        <h4 className="font-medium text-primary">
-                                            Afternoon
-                                        </h4>
-                                        <p className="mt-1">{day.afternoon}</p>
-                                    </div>
-                                    <Separator />
-                                    <div>
-                                        <h4 className="font-medium text-primary">
-                                            Evening
-                                        </h4>
-                                        <p className="mt-1">{day.evening}</p>
-                                    </div>
-                                    <div className="mt-4 pt-4 border-t">
-                                        <div className="flex justify-between items-center">
-                                            <div className="flex flex-wrap gap-2">
-                                                {day.placesOrActivities.map(
-                                                    (place: any) => (
-                                                        <Badge
-                                                            key={place}
-                                                            variant="outline"
-                                                        >
-                                                            {place}
-                                                        </Badge>
-                                                    )
-                                                )}
-                                            </div>
-                                            <div className="text-muted-foreground">
-                                                Estimated Cost: {day.cost} INR
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    ))}
-                </div>
+                <meta
+                    name="description"
+                    content="Create your detailed travel itinerary with TripTuner. Plan each day of your trip, organize activities, and explore tailored recommendations for your destinations."
+                />
 
-                {/* Notes Section */}
-                <Card>
-                    <CardContent className="pt-6">
-                        <h3 className="font-semibold mb-2">Important Notes</h3>
-                        <p className="text-muted-foreground">
-                            {itinerary.data.notes}
-                        </p>
-                    </CardContent>
-                </Card>
+                <meta
+                    name="keywords"
+                    content="itinerary planner, travel itinerary, trip planning, daily travel plans, vacation schedule, travel organizer"
+                />
 
-                <Button className="mr-4 bg-blue-500">
-                    Generate Another Trip
-                </Button>
-                <Button onClick={() => window.print()}>
-                    <Save />
-                    Save as pdf
-                </Button>
-            </div>
+                <meta
+                    property="og:title"
+                    content="TripTuner - Your Customized Travel Itinerary"
+                />
+                <meta
+                    property="og:description"
+                    content="Plan your trip efficiently with our customizable itinerary maker. Organize your travel schedule, add activities, and manage your trips with ease."
+                />
+                <meta
+                    property="og:image"
+                    content={`${
+                        import.meta.env.VITE_FRONTEND_URL
+                    }/TripTuner.svg`}
+                />
+                <meta
+                    property="og:url"
+                    content={`${import.meta.env.VITE_FRONTEND_URL}/itinerary`}
+                />
+                <meta property="og:type" content="website" />
+
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta
+                    name="twitter:title"
+                    content="TripTuner - Your Customized Travel Itinerary"
+                />
+                <meta
+                    name="twitter:description"
+                    content="Organize your travel plans, create detailed itineraries, and explore tailored travel recommendations with TripTuner."
+                />
+                <meta
+                    name="twitter:image"
+                    content={`${
+                        import.meta.env.VITE_FRONTEND_URL
+                    }/TripTuner.svg`}
+                />
+                <meta
+                    name="twitter:url"
+                    content={`${import.meta.env.VITE_FRONTEND_URL}/itinerary`}
+                />
+
+                <meta name="author" content="TripTuner Team" />
+                <meta name="robots" content="index, follow" />
+                <link
+                    rel="canonical"
+                    href={`${import.meta.env.VITE_FRONTEND_URL}/itinerary`}
+                />
+            </Helmet>
         </>
     );
 };

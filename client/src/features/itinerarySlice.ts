@@ -14,7 +14,7 @@ const initialState = {
         activityLevel: "",
         customNote: "",
     } as ItineraryInput,
-    itineraries: [] as Itinerary[],
+    itineraries: {} as Itinerary,
 };
 
 const itinerarySlice = createSlice({
@@ -32,7 +32,7 @@ const itinerarySlice = createSlice({
         },
 
         updateItineraries: (state, action: PayloadAction<Itinerary>) => {
-            state.itineraries.push(action.payload);
+            state.itineraries = { ...action.payload };
         },
         nextStep: (state) => {
             state.step++;

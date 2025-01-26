@@ -7,7 +7,7 @@ const Title: React.FC = () => {
                 <img
                     src="/yay.svg"
                     alt="Trip Planning Illustration"
-                    className=" max-w-full h-auto object-contain md:max-h-[400px] rounded-md"
+                    className=" max-w-full h-auto object-contain md:max-h-[400px] rounded-xl"
                 />
             </div>
 
