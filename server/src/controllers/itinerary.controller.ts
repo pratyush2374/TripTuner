@@ -4,6 +4,8 @@ import asyncHandler from "@/utils/AsyncHandler";
 import prisma from "@/utils/PrismaClient";
 import ApiError from "@/utils/ApiError";
 import createItinerary from "@/utils/CreateItenary";
+import { PLACES } from "@/utils/places";
+import checkDestination from "@/utils/checkDestination";
 
 interface ItineraryInput {
     destination: string;
@@ -38,8 +40,6 @@ const generateItinerary = asyncHandler(async (req: Request, res: Response) => {
     let attempts = 0;
     const startTime = Date.now();
     const MAX_DURATION = 30000; // 30 seconds
-
-    
 
     while (!itineraryData && Date.now() - startTime < MAX_DURATION) {
         try {
@@ -163,7 +163,6 @@ const editItinerary = asyncHandler(async (req: Request, res: Response) => {
     let attempts = 0;
     const startTime = Date.now();
 
-
     while (!itineraryData && Date.now() - startTime < 30000) {
         try {
             attempts++;
@@ -237,9 +236,8 @@ const editItinerary = asyncHandler(async (req: Request, res: Response) => {
 });
 
 const getItineraries = asyncHandler(async (req: Request, res: Response) => {
-    console.log("Yooo");
     const page = parseInt(req.params.page, 10);
-    
+
     if (isNaN(page) || page < 1) {
         throw new ApiError(400, "Invalid page number");
     }
@@ -266,8 +264,60 @@ const getItineraries = asyncHandler(async (req: Request, res: Response) => {
         },
     });
 
-    return res.status(200).json(new ApiResponse(200, itineraries, "Itineraries fetched successfully"));
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                itineraries,
+                "Itineraries fetched successfully"
+            )
+        );
 });
 
+const getPlaces = asyncHandler(async (req: Request, res: Response) => {
+    const place = req.query.p;
 
-export { generateItinerary, likeItinerary, editItinerary, getItineraries };
+    if (!place || typeof place !== "string") {
+        return res.status(400).json(new ApiError(400, "Invalid place"));
+    }
+
+    const searchTerm = place.toLowerCase();
+    const matchedPlaces = PLACES.filter((p) =>
+        p.toLowerCase().startsWith(searchTerm)
+    ).slice(0, 7);
+
+    if (matchedPlaces.length === 0) {
+        return res.status(200).json([]);
+    }
+
+    return res.status(200).json(matchedPlaces);
+});
+
+const validatePlace = asyncHandler(async (req: Request, res: Response) => {
+    const {destination} = req.body;
+    console.log(destination);
+
+    if (!destination) {
+        return res.status(400).json(new ApiError(400, "Invalid destination"));
+    }
+
+    const isValid = await checkDestination(destination);
+
+    if (!isValid) {
+        return res.status(400).json(new ApiError(400, "Invalid destination"));
+    }
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, null, "Destination is valid"));
+});
+
+export {
+    generateItinerary,
+    likeItinerary,
+    editItinerary,
+    getItineraries,
+    getPlaces,
+    validatePlace,
+};

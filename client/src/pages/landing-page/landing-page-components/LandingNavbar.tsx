@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "../landingPage.module.css";
+import { Link } from "react-router-dom";
 
 const LandingNavbar: React.FC = () => {
     return (
@@ -9,6 +10,9 @@ const LandingNavbar: React.FC = () => {
                 <p className={styles.brandName}>TripTuner</p>
             </div>
             <div className={styles.navLinks}>
+                <Link to="/itineraries" className="hidden md:block font-[500]">
+                    Itineraries
+                </Link>
                 <button className={styles.signInButton}>
                     <a href="/sign-in">Sign in / Sign up</a>
                 </button>

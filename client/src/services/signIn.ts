@@ -21,11 +21,11 @@ const signIn = async (email: string, password: string) => {
 
             if (response.status === 200) {
                 localStorage.setItem(
-                    "accessTokenExpiry",
+                    "ate",
                     response.data.data.accessTokenExpiry.toString()
                 );
                 localStorage.setItem(
-                    "refreshTokenExpiry",
+                    "rte",
                     response.data.data.refreshTokenExpiry.toString()
                 );
                 return response.data;

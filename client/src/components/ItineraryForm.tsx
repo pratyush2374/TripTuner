@@ -21,7 +21,7 @@ const ItineraryForm: React.FC = () => {
                     <ChevronLeft
                         className="cursor-pointer"
                         onClick={previousStep}
-                    />{" "}
+                    />
                     {step}/4
                 </div>
                 {step === 1 && <Step1 />}

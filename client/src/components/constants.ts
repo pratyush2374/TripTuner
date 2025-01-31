@@ -16,7 +16,7 @@ export const PREFERRED_ACTIVITIES = [
     "Water Sports",
     "Wildlife Watching",
     "Yoga & Meditation",
-    "Skiing/Snowboarding",
+    "Skiing/ Snowboarding",
     "Nightlife",
     "Cultural Experiences",
     "Relaxation",

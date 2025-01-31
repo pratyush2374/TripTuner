@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { TOUR_TYPES } from "./constants";
 import { useDispatch, useSelector } from "react-redux";
 import { updateFormData, nextStep } from "@/features/itinerarySlice";
+import axios from "axios";
+import { useToast } from "@/hooks/use-toast";
 
 const Step1: React.FC = () => {
     const {
@@ -11,25 +13,45 @@ const Step1: React.FC = () => {
         formState: { errors },
     } = useForm<{ destination: string; days: number; tourType: string }>();
     const dispatch = useDispatch();
+    const { toast } = useToast();
+    const [checking, setChecking] = useState(false);
 
-    const onSubmit = (data: {
+    const onSubmit = async (data: {
         destination: string;
         days: number;
         tourType: string;
     }) => {
-        dispatch(
-            updateFormData({
-                destination: data.destination,
-                days: data.days,
-                tourType: data.tourType,
-            })
-        );
-        dispatch(nextStep());
+        try {
+            setChecking(true);
+            const res = await axios.post(
+                `${
+                    import.meta.env.VITE_SERVER_URL
+                }/api/itinerary/validate-place`,
+                { destination: data.destination }
+            );
+            if (res.status == 200) {
+                dispatch(
+                    updateFormData({
+                        destination: data.destination,
+                        days: data.days,
+                        tourType: data.tourType,
+                    })
+                );
+                dispatch(nextStep());
+            }
+        } catch (error) {
+            toast({
+                title: "Error",
+                description: "Please enter a valid destination",
+                variant: "destructive",
+            });
+        } finally {
+            setChecking(false);
+        }
     };
     const { destination, days, tourType } = useSelector(
         (state: any) => state.itinerary.formData
     );
-
     return (
         <>
             <h2 className="text-2xl font-bold mb-6 text-center mt-2">
@@ -128,7 +150,7 @@ const Step1: React.FC = () => {
                     type="submit"
                     className="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition-colors duration-300 font-semibold mt-4"
                 >
-                    Next
+                    {checking ? "Validating Destination..." : "Next"}
                 </button>
             </form>
         </>

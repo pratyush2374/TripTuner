@@ -131,7 +131,7 @@ const ItinerarySection: React.FC = () => {
                             className="bg-blue-500 text-white px-6 py-3 rounded-full 
                         hover:bg-royal-blue-700 transition-colors flex items-center gap-2 
                         shadow-md hover:shadow-lg"
-                            onClick={() => (window.location.reload())}
+                            onClick={() => window.location.reload()}
                         >
                             Generate Another Trip
                             <ArrowRight className="h-5 w-5" />

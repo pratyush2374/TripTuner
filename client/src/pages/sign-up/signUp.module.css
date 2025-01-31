@@ -91,6 +91,11 @@
     background-color: #015fc4;
 }
 
+.formSection input:focus {
+    outline: none;
+    border: 1px solid #202020;
+}
+
 .formSection p {
     margin-top: 15px;
     color: #666;
