@@ -1,6 +1,7 @@
 import { useToast } from "@/hooks/use-toast";
 import styles from "@/pages/landing-page/landingPage.module.css";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const DashboardNavbar: React.FC = () => {
     const { toast } = useToast();
@@ -12,6 +13,8 @@ const DashboardNavbar: React.FC = () => {
                     withCredentials: true,
                 }
             );
+            localStorage.removeItem("ate");
+            localStorage.removeItem("rte");
             toast({
                 title: "Success",
                 description: "Signed out successfully",
@@ -37,10 +40,16 @@ const DashboardNavbar: React.FC = () => {
                     />
                     <p className={styles.brandName}>TripTuner</p>
                 </div>
-                <div className={styles.navLinks} onClick={signOut}>
-                    <button className={styles.signOutButton}>
+                <div className={styles.navLinks}>
+                    <Link
+                        to="/itineraries"
+                        className="hidden md:block font-[500]"
+                    >
+                        Itineraries
+                    </Link>
+                    <button className={styles.signOutButton} onClick={signOut}>
                         <img src="/Logout.svg" alt="logout" />
-                        <a href="/sign-in">Sign out</a>
+                        <p>Sign out</p>
                     </button>
                 </div>
             </nav>

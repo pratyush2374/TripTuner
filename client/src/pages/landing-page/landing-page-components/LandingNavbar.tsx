@@ -14,7 +14,7 @@ const LandingNavbar: React.FC = () => {
                     Itineraries
                 </Link>
                 <button className={styles.signInButton}>
-                    <a href="/sign-in">Sign in / Sign up</a>
+                    <Link to="/sign-in">Sign in / Sign up</Link>
                 </button>
             </div>
         </nav>

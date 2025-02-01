@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { useToast } from "@/hooks/use-toast";
 import styles from "../signUp.module.css";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 type FormData = {
     fullName: string;
@@ -322,7 +323,7 @@ const SignUpForm: React.FC = () => {
 
                         <p>
                             Already have an account?{" "}
-                            <a href="/sign-in">Sign In</a>
+                            <Link to="/sign-in">Sign In</Link>
                         </p>
                     </div>
                 </div>
