@@ -170,7 +170,9 @@ const unLikeItinerary = asyncHandler(async (req: Request, res: Response) => {
         where: { id: user.id },
         data: {
             likedItineraries: {
-                set: user.likedItineraries.filter((itineraryId) => itineraryId !== id)
+                set: user.likedItineraries.filter(
+                    (itineraryId) => itineraryId !== id
+                ),
             },
         },
     });
@@ -294,7 +296,7 @@ const getItineraries = asyncHandler(async (req: Request, res: Response) => {
         throw new ApiError(400, "Invalid page number");
     }
 
-    const itemsPerPage = 20;
+    const itemsPerPage = 9;
     const skip = (page - 1) * itemsPerPage;
 
     // Fetch itineraries without the 'days' field
@@ -366,25 +368,26 @@ const validatePlace = asyncHandler(async (req: Request, res: Response) => {
 });
 
 const getItinerary = asyncHandler(async (req: Request, res: Response) => {
-    const id = req.params.id;
+    const { id } = req.params;
+    console.log(id);
     const user = req.user;
 
     if (!id) {
         return res.status(400).json(new ApiError(400, "Invalid id"));
     }
 
-    const userInDb = await prisma.user.findUnique({
-        where: { id: user.id },
-    });
+    let isLiked = false;
+    if (user && user.id) {
+        const userInDb = await prisma.user.findUnique({
+            where: { id: user.id },
+        });
 
-    let isLiked;
-    userInDb?.likedItineraries.map((itinerary) => {
-        if (itinerary === id) {
-            isLiked = true;
-        } else {
-            isLiked = false;
-        }
-    });
+        userInDb?.likedItineraries.map((itinerary) => { 
+            if (itinerary === id) {
+                isLiked = true;
+            }
+        });
+    }
 
     const itinerary = await prisma.itinerary.findUnique({
         where: { id },

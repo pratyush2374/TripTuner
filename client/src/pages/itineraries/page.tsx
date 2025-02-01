@@ -1,13 +1,14 @@
-import LandingNavbar from "../landing-page/landing-page-components/LandingNavbar";
-import ItinerarySection from "./itinerary-components/Itinerary";
-import ItineraryHelmet from "./itinerary-components/ItineraryHelmet";
+import DynamicNavbar from "@/components/DynamicNavbar";
+import ItinerariesSection from "./itinerary-components/Itineraries";
+import ItinerariesHelmet from "./itinerary-components/ItinerariesHelmet";
 
 const Itineraries: React.FC = () => {
     return (
         <>
-            <LandingNavbar />
-            <ItineraryHelmet />
-            <ItinerarySection />
+        
+            <DynamicNavbar home={true} />
+            <ItinerariesHelmet />
+            <ItinerariesSection />
         </>
     );
 };

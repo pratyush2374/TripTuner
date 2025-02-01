@@ -1,29 +1,29 @@
 import React from "react";
 import { Helmet } from "react-helmet-async"; // Import Helmet
 
-const ItineraryHelmet: React.FC = () => {
+const ItinerariesHelmet: React.FC = () => {
     return (
         <>
             <Helmet>
-                <title>TripTuner - Your Customized Travel Itinerary</title>
+                <title>TripTuner - Your Customized Travel Itineraries</title>
 
                 <meta
                     name="description"
-                    content="Create your detailed travel itinerary with TripTuner. Plan each day of your trip, organize activities, and explore tailored recommendations for your destinations."
+                    content="Create your detailed travel itineraries with TripTuner. Plan each day of your trips, organize activities, and explore tailored recommendations for your destinations."
                 />
 
                 <meta
                     name="keywords"
-                    content="itinerary planner, travel itinerary, trip planning, daily travel plans, vacation schedule, travel organizer"
+                    content="itinerary planner, travel itineraries, trip planning, daily travel plans, vacation schedules, travel organizer"
                 />
 
                 <meta
                     property="og:title"
-                    content="TripTuner - Your Customized Travel Itinerary"
+                    content="TripTuner - Your Customized Travel Itineraries"
                 />
                 <meta
                     property="og:description"
-                    content="Plan your trip efficiently with our customizable itinerary maker. Organize your travel schedule, add activities, and manage your trips with ease."
+                    content="Plan your trips efficiently with our customizable itinerary maker. Organize your travel schedules, add activities, and manage your itineraries with ease."
                 />
                 <meta
                     property="og:image"
@@ -33,14 +33,14 @@ const ItineraryHelmet: React.FC = () => {
                 />
                 <meta
                     property="og:url"
-                    content={`${import.meta.env.VITE_FRONTEND_URL}/itinerary`}
+                    content={`${import.meta.env.VITE_FRONTEND_URL}/itineraries`}
                 />
                 <meta property="og:type" content="website" />
 
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta
                     name="twitter:title"
-                    content="TripTuner - Your Customized Travel Itinerary"
+                    content="TripTuner - Your Customized Travel Itineraries"
                 />
                 <meta
                     name="twitter:description"
@@ -54,18 +54,18 @@ const ItineraryHelmet: React.FC = () => {
                 />
                 <meta
                     name="twitter:url"
-                    content={`${import.meta.env.VITE_FRONTEND_URL}/itinerary`}
+                    content={`${import.meta.env.VITE_FRONTEND_URL}/itineraries`}
                 />
 
                 <meta name="author" content="TripTuner Team" />
                 <meta name="robots" content="index, follow" />
                 <link
                     rel="canonical"
-                    href={`${import.meta.env.VITE_FRONTEND_URL}/itinerary`}
+                    href={`${import.meta.env.VITE_FRONTEND_URL}/itineraries`}
                 />
             </Helmet>
         </>
     );
 };
 
-export default ItineraryHelmet;
+export default ItinerariesHelmet;
