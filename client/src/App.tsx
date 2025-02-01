@@ -11,6 +11,7 @@ import Itineraries from "./pages/itineraries/page";
 import Dashboard from "./pages/dashboard/page";
 import Itinerary from "./pages/itinerary/page";
 import { Toaster } from "./components/ui/toaster";
+import SearchPage from "./pages/search/page";
 
 const App: React.FC = () => {
     return (
@@ -30,6 +31,7 @@ const App: React.FC = () => {
                     />
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/itinerary/:id" element={<Itinerary />} />
+                    <Route path="/search/:place" element={<SearchPage />} />
                 </Routes>
             </Router>
             <Toaster />

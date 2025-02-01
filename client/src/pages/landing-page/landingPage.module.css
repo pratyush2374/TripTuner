@@ -83,6 +83,9 @@
     display: flex;
     gap: 5px;
     border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-family: inherit;
 
     &:hover {
@@ -102,12 +105,12 @@
 
     .navLinks {
         gap: 0.5rem;
-        font-size: 0.7rem;
+        font-size: 0.8rem;
     }
 
     .signInButton,
     .contactButton {
         padding: 0.4rem 0.8rem;
         font-size: 0.9rem;
-    }
+    } 
 }

@@ -20,7 +20,7 @@ const DynamicNavbar: React.FC<{ home: boolean }> = ({ home }) => {
             <div className={styles.navLinks}>
                 <Link
                     to={home ? "/" : "/itineraries"}
-                    className="hidden md:block font-[500]"
+                    className="font-[500]"
                 >
                     {home ? "Home" : "Itineraries"}
                 </Link>

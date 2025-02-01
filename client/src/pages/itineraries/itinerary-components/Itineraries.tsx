@@ -40,11 +40,11 @@ const ItinerariesSection: React.FC = () => {
     }, [page]);
     return (
         <>
-            <div className="container mx-auto px-4 py-8 md:w-[90%] mt-20">
+            <div className="container mx-auto px-4 py-8 md:w-[90%] mt-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {data.length > 0 ? (
                         data.map((itinerary: any) => (
-                            <Link to={`/itinerary/${itinerary.id}`}>
+                            <Link to={`/itinerary/${itinerary.id}`} key={itinerary.id}>
                                 <ItineraryOverview
                                     key={itinerary.id}
                                     itinerary={itinerary}

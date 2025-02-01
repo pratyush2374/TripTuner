@@ -4,8 +4,9 @@ import asyncHandler from "@/utils/AsyncHandler";
 import prisma from "@/utils/PrismaClient";
 import ApiError from "@/utils/ApiError";
 import createItinerary from "@/utils/CreateItenary";
-import { PLACES } from "@/utils/places";
+import PLACES from "@/utils/array";
 import checkDestination from "@/utils/checkDestination";
+import addPlaceId from "@/utils/addPlaceId";
 
 interface ItineraryInput {
     destination: string;
@@ -99,6 +100,8 @@ const generateItinerary = asyncHandler(async (req: Request, res: Response) => {
             days: true,
         },
     });
+
+    addPlaceId(itineraryData.destination);
 
     return res
         .status(201)
@@ -330,27 +333,23 @@ const getItineraries = asyncHandler(async (req: Request, res: Response) => {
 });
 
 const getPlaces = asyncHandler(async (req: Request, res: Response) => {
-    const place = req.query.p;
+    const place = req.params.place;
 
     if (!place || typeof place !== "string") {
         return res.status(400).json(new ApiError(400, "Invalid place"));
     }
 
     const searchTerm = place.toLowerCase();
-    const matchedPlaces = PLACES.filter((p) =>
-        p.toLowerCase().startsWith(searchTerm)
-    ).slice(0, 7);
 
-    if (matchedPlaces.length === 0) {
-        return res.status(200).json([]);
-    }
+    const matchedPlaces = PLACES.filter((p) =>
+        p.toLowerCase().includes(searchTerm)
+    );
 
     return res.status(200).json(matchedPlaces);
 });
 
 const validatePlace = asyncHandler(async (req: Request, res: Response) => {
     const { destination } = req.body;
-    console.log(destination);
 
     if (!destination) {
         return res.status(400).json(new ApiError(400, "Invalid destination"));
@@ -369,7 +368,6 @@ const validatePlace = asyncHandler(async (req: Request, res: Response) => {
 
 const getItinerary = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
-    console.log(id);
     const user = req.user;
 
     if (!id) {
@@ -382,7 +380,7 @@ const getItinerary = asyncHandler(async (req: Request, res: Response) => {
             where: { id: user.id },
         });
 
-        userInDb?.likedItineraries.map((itinerary) => { 
+        userInDb?.likedItineraries.map((itinerary) => {
             if (itinerary === id) {
                 isLiked = true;
             }
@@ -411,6 +409,40 @@ const getItinerary = asyncHandler(async (req: Request, res: Response) => {
         );
 });
 
+const getItinerariesFromPlace = asyncHandler(
+    async (req: Request, res: Response) => {
+        const place = req.params.place;
+        if (!place) {
+            return res.status(400).json(new ApiError(400, "Invalid place"));
+        }
+
+        const itineraries = await prisma.itinerary.findMany({
+            where: {
+                destination: {
+                    equals: place,
+                    mode: "insensitive",
+                },
+            },
+        });
+
+        if (!itineraries) {
+            return res
+                .status(404)
+                .json(new ApiError(404, "Itineraries not found"));
+        }
+
+        return res
+            .status(200)
+            .json(
+                new ApiResponse(
+                    200,
+                    itineraries,
+                    "Itineraries fetched successfully"
+                )
+            );
+    }
+);
+
 export {
     generateItinerary,
     likeItinerary,
@@ -420,4 +452,5 @@ export {
     validatePlace,
     getItinerary,
     unLikeItinerary,
+    getItinerariesFromPlace,
 };
