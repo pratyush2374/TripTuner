@@ -14,7 +14,7 @@ model User {
   password         String
   preferences      String[]
   bio              String?
-  savedItineraries Itinerary[]
+  likedItineraries String[]
   currency         String
   refreshToken     String
   createdAt        DateTime    @default(now())
@@ -33,7 +33,6 @@ model Itinerary {
   likes       Int
   notes       String
   isPublic    Boolean
-  user        User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String?  @db.ObjectId
 }
 

@@ -7,7 +7,7 @@ import {
     sendLinkForForgotPassword,
     resetPassword,
     verifyCode,
-    getItineraries
+    getItineraries,
 } from "@/controllers/user.controller";
 import verifyJwt from "@/middlewares/verifyJwt.middleware";
 import { Router } from "express";
@@ -22,6 +22,6 @@ userRouter.get("/refresh-tokens", verifyJwt, refreshBothTokens);
 userRouter.get("/sign-out", verifyJwt, signOut);
 userRouter.post("/send-forgot-password-link", sendLinkForForgotPassword);
 userRouter.post("/reset-password", resetPassword);
-userRouter.get("/my-itineraries", verifyJwt,  getItineraries);
+userRouter.get("/my-itineraries", verifyJwt, getItineraries);
 
 export default userRouter;

@@ -49,7 +49,7 @@ const LandingHelmet: React.FC = () => {
                     name="twitter:image"
                     content={`${
                         import.meta.env.VITE_FRONTEND_URL
-                    }/TripTuner.svg`}
+                    }/public/TripTuner.svg`}
                 />
                 <meta
                     name="twitter:url"

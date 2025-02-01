@@ -110,15 +110,32 @@ const generateItinerary = asyncHandler(async (req: Request, res: Response) => {
 const likeItinerary = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
 
+    if (!id) {
+        throw new ApiError(400, "Missing itinerary id");
+    }
+
+    const user = req.user;
+
+    if (!user) {
+        throw new ApiError(401, "Unauthorized");
+    }
+
     const itinerary = await prisma.itinerary.findUnique({
         where: { id },
+    });
+
+    await prisma.user.update({
+        where: { id: user.id },
+        data: {
+            likedItineraries: { push: id },
+        },
     });
 
     if (!itinerary) {
         throw new ApiError(404, "Itinerary not found");
     }
 
-    const updatedItinerary = await prisma.itinerary.update({
+    await prisma.itinerary.update({
         where: { id },
         data: {
             likes: itinerary.likes + 1,
@@ -127,13 +144,48 @@ const likeItinerary = asyncHandler(async (req: Request, res: Response) => {
 
     return res
         .status(200)
-        .json(
-            new ApiResponse(
-                200,
-                updatedItinerary,
-                "Itinerary liked successfully"
-            )
-        );
+        .json(new ApiResponse(200, null, "Itinerary liked successfully"));
+});
+
+const unLikeItinerary = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    if (!id) {
+        throw new ApiError(400, "Missing itinerary id");
+    }
+    const user = req.user;
+
+    if (!user) {
+        throw new ApiError(401, "Unauthorized");
+    }
+
+    const itinerary = await prisma.itinerary.findUnique({
+        where: { id },
+    });
+
+    if (!itinerary) {
+        throw new ApiError(404, "Itinerary not found");
+    }
+
+    await prisma.user.update({
+        where: { id: user.id },
+        data: {
+            likedItineraries: {
+                set: user.likedItineraries.filter((itineraryId) => itineraryId !== id)
+            },
+        },
+    });
+
+    await prisma.itinerary.update({
+        where: { id },
+        data: {
+            likes: itinerary.likes - 1,
+            userId: user.id,
+        },
+    });
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, null, "Itinerary unliked successfully"));
 });
 
 const editItinerary = asyncHandler(async (req: Request, res: Response) => {
@@ -295,7 +347,7 @@ const getPlaces = asyncHandler(async (req: Request, res: Response) => {
 });
 
 const validatePlace = asyncHandler(async (req: Request, res: Response) => {
-    const {destination} = req.body;
+    const { destination } = req.body;
     console.log(destination);
 
     if (!destination) {
@@ -313,6 +365,49 @@ const validatePlace = asyncHandler(async (req: Request, res: Response) => {
         .json(new ApiResponse(200, null, "Destination is valid"));
 });
 
+const getItinerary = asyncHandler(async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const user = req.user;
+
+    if (!id) {
+        return res.status(400).json(new ApiError(400, "Invalid id"));
+    }
+
+    const userInDb = await prisma.user.findUnique({
+        where: { id: user.id },
+    });
+
+    let isLiked;
+    userInDb?.likedItineraries.map((itinerary) => {
+        if (itinerary === id) {
+            isLiked = true;
+        } else {
+            isLiked = false;
+        }
+    });
+
+    const itinerary = await prisma.itinerary.findUnique({
+        where: { id },
+        include: {
+            days: true,
+        },
+    });
+
+    if (!itinerary) {
+        return res.status(404).json(new ApiError(404, "Itinerary not found"));
+    }
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                { ...itinerary, isLiked },
+                "Itinerary fetched successfully"
+            )
+        );
+});
+
 export {
     generateItinerary,
     likeItinerary,
@@ -320,4 +415,6 @@ export {
     getItineraries,
     getPlaces,
     validatePlace,
+    getItinerary,
+    unLikeItinerary,
 };
