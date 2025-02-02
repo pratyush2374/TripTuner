@@ -8,17 +8,17 @@ datasource db {
 }
 
 model User {
-  id               String      @id @default(auto()) @map("_id") @db.ObjectId
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
   name             String
-  email            String      @unique
+  email            String   @unique
   password         String
   preferences      String[]
   bio              String?
   likedItineraries String[]
   currency         String
   refreshToken     String
-  createdAt        DateTime    @default(now())
-  updatedAt        DateTime    @updatedAt
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }
 
 model Itinerary {
@@ -46,4 +46,11 @@ model Day {
   cost               Int
   Itinerary          Itinerary? @relation(fields: [itineraryId], references: [id])
   itineraryId        String?    @db.ObjectId
+}
+
+model Destination {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  destination String
+
+  @@index([destination])
 }

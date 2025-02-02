@@ -8,7 +8,7 @@ import {
     validatePlace,
     getItinerary,
     unLikeItinerary,
-    getItinerariesFromPlace
+    getItinerariesFromPlace,
 } from "@/controllers/itinerary.controller";
 import addUser from "@/middlewares/addUser.middleware";
 import verifyJwt from "@/middlewares/verifyJwt.middleware";

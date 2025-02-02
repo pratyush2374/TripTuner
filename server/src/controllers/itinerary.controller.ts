@@ -4,9 +4,7 @@ import asyncHandler from "@/utils/AsyncHandler";
 import prisma from "@/utils/PrismaClient";
 import ApiError from "@/utils/ApiError";
 import createItinerary from "@/utils/CreateItenary";
-import PLACES from "@/utils/array";
 import checkDestination from "@/utils/checkDestination";
-import addPlaceId from "@/utils/addPlaceId";
 
 interface ItineraryInput {
     destination: string;
@@ -101,7 +99,11 @@ const generateItinerary = asyncHandler(async (req: Request, res: Response) => {
         },
     });
 
-    addPlaceId(itineraryData.destination);
+    await prisma.destination.create({
+        data: {
+            destination: destination,
+        },
+    });
 
     return res
         .status(201)
@@ -339,13 +341,18 @@ const getPlaces = asyncHandler(async (req: Request, res: Response) => {
         return res.status(400).json(new ApiError(400, "Invalid place"));
     }
 
-    const searchTerm = place.toLowerCase();
+    const matchedPlaces = await prisma.destination.findMany({
+        where: {
+            destination: {
+                contains: place,
+                mode: "insensitive",
+            },
+        },
+    });
 
-    const matchedPlaces = PLACES.filter((p) =>
-        p.toLowerCase().includes(searchTerm)
-    );
+    const places = matchedPlaces.map((place) => place.destination);
 
-    return res.status(200).json(matchedPlaces);
+    return res.status(200).json(places);
 });
 
 const validatePlace = asyncHandler(async (req: Request, res: Response) => {

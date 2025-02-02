@@ -38,7 +38,6 @@ const SearchSection: React.FC = () => {
 
         if (text !== "") {
             getData();
-            console.log(places);
         } else {
             setPlaces([]);
         }
