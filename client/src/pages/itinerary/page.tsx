@@ -1,7 +1,7 @@
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
     MapPin,
     Calendar,
@@ -13,7 +13,6 @@ import {
     ArrowRight,
 } from "lucide-react";
 import DynamicNavbar from "@/components/DynamicNavbar";
-import { Toaster } from "@/components/ui/toaster";
 
 interface APIResponse {
     statusCode: number;
