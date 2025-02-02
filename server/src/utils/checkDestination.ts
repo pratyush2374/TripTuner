@@ -21,7 +21,9 @@ const checkDestination = async (destination: string): Promise<boolean> => {
 
     try {
         const prompt = `Determine if "${destination}" is a valid travel destination. 
-       Respond with a JSON object indicating validity.`;
+       Respond with a JSON object indicating validity.
+       Ignore casing, punctuation, and spacing only check if the destination is a valid travel destination. not a random string
+       eg - New-york, new york, new york city, new-york city are all true`;
 
         const result = await model.generateContent(prompt);
         const response = JSON.parse(result.response.text());
