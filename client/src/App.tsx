@@ -37,6 +37,7 @@ const App: React.FC = () => {
             console.warn("Error refreshing tokens:");
         }
     };
+    
 
     const logout = async () => {
         try {
