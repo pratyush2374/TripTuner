@@ -1,7 +1,7 @@
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import {
     MapPin,
     Calendar,
@@ -13,6 +13,7 @@ import {
     ArrowRight,
 } from "lucide-react";
 import DynamicNavbar from "@/components/DynamicNavbar";
+import { Toaster } from "@/components/ui/toaster";
 
 interface APIResponse {
     statusCode: number;
@@ -55,6 +56,7 @@ const Itinerary: React.FC = () => {
     const [likes, setLikes] = useState(0);
     const [isLiked, setIsliked] = useState(false);
     const { toast } = useToast();
+    const navigate = useNavigate();
 
     const getItinerary = async () => {
         try {
@@ -144,7 +146,7 @@ const Itinerary: React.FC = () => {
                     className="bg-blue-500 text-white px-6 py-3 rounded-full 
               hover:bg-royal-blue-700 transition-colors flex items-center gap-2 
               shadow-md hover:shadow-lg mt-8"
-                    onClick={() => <Navigate to="/" />}
+                    onClick={() => navigate("/")}
                 >
                     Generate
                     <ArrowRight className="h-5 w-5" />
@@ -153,7 +155,7 @@ const Itinerary: React.FC = () => {
         );
 
     return (
-        <>
+        <>            
             <DynamicNavbar home={false} />
             <div className="bg-white min-h-screen py-12 px-4 sm:px-6 lg:px-8 mt-12">
                 <div className="max-w-4xl mx-auto space-y-8">

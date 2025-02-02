@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styles from "@/pages/landing-page/landingPage.module.css";
+import styles from "./component.module.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";

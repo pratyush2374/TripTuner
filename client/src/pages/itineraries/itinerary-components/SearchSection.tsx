@@ -73,7 +73,7 @@ const SearchSection: React.FC = () => {
                 <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
                     Search itineraries by place
                 </h2>
-                <div className="flex items-center border border-gray-300 rounded-full overflow-hidden">
+                <div className="flex items-center border border-gray-300 rounded-full overflow-hidden w-[90%] m-auto md:w-full">
                     <input
                         type="text"
                         className="w-full px-4 py-2 text-gray-700 leading-tight focus:outline-none"
